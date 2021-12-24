@@ -1,0 +1,57 @@
+name: "Terraform Destroy Template"
+
+on:
+  workflow_call:
+    inputs:
+      WORKSPACE_NAME:
+        required: true
+        type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        required: true
+      AZURE_CLIENT_SECRET:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+
+jobs:
+  terraform:
+    name: "Terraform"
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+      
+      - name: Terraform Set Workspace
+        id: set-workspace
+        run: |
+          export WORKSPACE=$(terraform workspace list| grep ${{ inputs.WORKSPACE_NAME }})
+          export TRIM_WORKSPACE=$(echo ${WORKSPACE##*( )})
+          if [ "" = "$TRIM_WORKSPACE" ]; then terraform workspace new ${{ inputs.WORKSPACE_NAME }}; fi
+
+      - name: Terraform Select Workspace
+        id: select-workspace
+        run: terraform workspace select ${{ inputs.WORKSPACE_NAME }}
+
+      - name: Terraform Destroy
+        id: destroy
+        run: terraform destroy -auto-approve
