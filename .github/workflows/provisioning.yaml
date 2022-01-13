@@ -67,7 +67,8 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           export WORKSPACE=$(terraform workspace list| grep ${{ inputs.WORKSPACE_NAME }})
-          terraform plan -no-color -var-file="$WORKSPACE.tfvars"
+          export TRIM_WORKSPACE=$(echo ${WORKSPACE##*( )})
+          terraform plan -no-color -var-file="$TRIM_WORKSPACE.tfvars"
         continue-on-error: true
 
       - name: Update Pull Request
@@ -109,5 +110,6 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          export WORKSPACE=$(terraform workspace list| grep ${{ inputs.WORKSPACE_NAME }})          
-          terraform apply -auto-approve -var-file="$WORKSPACE.tfvars"
+          export WORKSPACE=$(terraform workspace list| grep ${{ inputs.WORKSPACE_NAME }})
+          export TRIM_WORKSPACE=$(echo ${WORKSPACE##*( )})          
+          terraform apply -auto-approve -var-file="$TRIM_WORKSPACE.tfvars"
