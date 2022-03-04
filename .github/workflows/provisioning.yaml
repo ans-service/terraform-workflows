@@ -44,7 +44,7 @@ jobs:
         run: terraform fmt -check
       - name: GitCredentials
         id: git_credentials
-        run: git config --global url."https://oauth2:${{ secrets.GIT_PAT_TOKEN }}@github.com/${{ secrets.ORGANIZATION_NAME }}/".insteadOf https://github.com/${{ secrets.ORGANIZATION_NAME }}/
+        run: git config --global url."https://oauth2:${{ secrets.GIT_PAT_TOKEN }}@github.com/ans-chile/".insteadOf https://github.com/ans-chile/
       - name: Terraform Init
         id: init
         run: terraform init
