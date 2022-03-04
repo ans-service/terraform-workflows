@@ -28,8 +28,8 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      GIT_TOKEN: ${{ secrets.GIT_PAT_TOKEN }}
-      ORGANIZATION_NAME: $${{ secrets.ORGANIZATION_NAME }}
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      ORGANIZATION_NAME: ${{ secrets.ORGANIZATION_NAME }}
     runs-on: ubuntu-latest
 
     defaults:
