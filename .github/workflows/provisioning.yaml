@@ -24,6 +24,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      GIT_TOKEN: ${{ secrets.GIT_PAT_TOKEN }}
     runs-on: ubuntu-latest
 
     defaults:
@@ -44,7 +45,7 @@ jobs:
         run: terraform fmt -check
       - name: GitCredentials
         id: git_credentials
-        run: git config --global url."https://oauth2:${{ secrets.GIT_PAT_TOKEN }}@github.com/ans-chile/".insteadOf https://github.com/ans-chile/
+        run: git config --global url."https://oauth2:$GIT_TOKEN@github.com/ans-chile/".insteadOf https://github.com/ans-chile/
       - name: Terraform Init
         id: init
         run: terraform init
