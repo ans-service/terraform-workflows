@@ -15,6 +15,10 @@ on:
         required: true
       AZURE_TENANT_ID:
         required: true
+      GIT_TOKEN:
+        required: true
+      ORGANIZATION_NAME:
+        required: true
 
 jobs:
   terraform:
