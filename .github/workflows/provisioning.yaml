@@ -42,11 +42,13 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
-
+      - name: GitCredentials
+        id: git_credentials
+        run: git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com".insteadOf https://github.com
       - name: Terraform Init
         id: init
         run: terraform init
-      
+
       - name: Terraform Set Workspace
         id: set-workspace
         run: |
@@ -82,7 +84,7 @@ jobs:
             #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
 
             #### Terraform Workspace (Environment) \`${{ inputs.WORKSPACE_NAME }}\`
-            
+
             <details><summary>Show Plan</summary>
 
             \`\`\`\n
