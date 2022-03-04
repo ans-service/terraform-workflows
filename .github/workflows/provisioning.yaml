@@ -15,6 +15,10 @@ on:
         required: true
       AZURE_TENANT_ID:
         required: true
+      GIT_TOKEN:
+        required: true
+      ORGANIZATION_NAME:
+        required: true
 
 jobs:
   terraform:
@@ -24,6 +28,8 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      TOKEN: ${{ secrets.GIT_TOKEN }}
+      TENANT: ${{ secrets.ORGANIZATION_NAME }}
     runs-on: ubuntu-latest
 
     defaults:
@@ -43,10 +49,14 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
+      - name: GitCredentials
+        id: git_credentials
+        run: git config --global url."https://oauth2:$TOKEN@github.com/$TENANT/".insteadOf https://github.com/$TENANT/
+
       - name: Terraform Init
         id: init
         run: terraform init
-      
+
       - name: Terraform Set Workspace
         id: set-workspace
         run: |
@@ -82,7 +92,7 @@ jobs:
             #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
 
             #### Terraform Workspace (Environment) \`${{ inputs.WORKSPACE_NAME }}\`
-            
+
             <details><summary>Show Plan</summary>
 
             \`\`\`\n
