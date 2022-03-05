@@ -6,6 +6,11 @@ on:
       WORKSPACE_NAME:
         required: true
         type: string
+      ARGS:
+        required: false
+        default: ""
+        type: string
+
     secrets:
       AZURE_CLIENT_ID:
         required: true
@@ -75,7 +80,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -var-file="${{ inputs.WORKSPACE_NAME }}.tfvars"
+        run: terraform plan -no-color -var-file="${{ inputs.WORKSPACE_NAME }}.tfvars ${{ inputs.ARGS }}"
         continue-on-error: true
 
       - name: Update Pull Request
@@ -116,4 +121,4 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -var-file="${{ inputs.WORKSPACE_NAME }}.tfvars"
+        run: terraform apply -auto-approve -var-file="${{ inputs.WORKSPACE_NAME }}.tfvars ${{ inputs.ARGS }}"
