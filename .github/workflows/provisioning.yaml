@@ -10,6 +10,10 @@ on:
         required: false
         default: ""
         type: string
+      RUNS_ON:
+        required: false
+        default: "ubuntu-latest"
+        type: string
 
     secrets:
       AZURE_CLIENT_ID:
@@ -35,7 +39,7 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       TOKEN: ${{ secrets.GIT_TOKEN }}
       TENANT: ${{ secrets.ORGANIZATION_NAME }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.RUNS_ON }}
 
     defaults:
       run:
